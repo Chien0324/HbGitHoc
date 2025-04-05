@@ -1,0 +1,55 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";  // Layout chung
+}
+
+@model List<SIMS_App.Models.Course>  // Model là danh sách khóa học
+
+@{
+    ViewData["Title"] = "Manage Courses";  // Tiêu đề trang
+}
+
+<div class="container">
+    <h2 class="text-center">Manage Courses</h2>  // Tiêu đề trang
+
+    <!-- Form thêm khóa học mới -->
+    <input type="text" id="courseName" placeholder="Course Name">
+    <input type="date" id="startDate">  // Ngày bắt đầu
+    <input type="date" id="endDate">  // Ngày kết thúc
+    <input type="number" id="totalStudents" placeholder="Total Students">  // Tổng số sinh viên
+    <input type="number" id="sessions" placeholder="Number of Sessions">  // Số buổi học
+    <button onclick="addCourse()">Add Course</button>  // Nút thêm khóa học
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>ID</th>  // Cột ID khóa học
+                <th>Name</th>  // Cột tên khóa học
+                <th>Total Students</th>  // Cột tổng số sinh viên
+                <th>Start Date</th>  // Cột ngày bắt đầu
+                <th>End Date</th>  // Cột ngày kết thúc
+                <th>Sessions</th>  // Cột số buổi học
+                <th>Action</th>  // Cột hành động
+            </tr>
+        </thead>
+        <tbody id="courseTable">
+            @foreach (var course in Model)  // Duyệt qua từng khóa học
+            {
+                <tr>
+                    <td>@course.CourseId</td>  // Hiển thị ID khóa học
+                    <td>@course.Name</td>  // Hiển thị tên khóa học
+                    <!-- Các thông tin khác -->
+                    <td>
+                        <!-- Các nút hành động -->
+                        <button onclick="editCourse(@course.CourseId, '@course.Name')">Edit</button>
+                        <button onclick="deleteCourse(@course.CourseId)">Delete</button>
+                        <button onclick="viewStudents(@course.CourseId)">View Students</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<script>
+    // Các hàm xử lý: addCourse, editCourse, deleteCourse, viewStudents
+</script>

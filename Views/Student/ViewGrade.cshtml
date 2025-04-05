@@ -1,0 +1,33 @@
+﻿<!-- View xem điểm của sinh viên -->
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";  // Layout chung
+}
+@model List<SIMS_App.Models.Grade>  // Model là danh sách điểm
+
+<h2>My Grades</h2>  <!-- Tiêu đề -->
+<!-- Bảng hiển thị điểm -->
+<table class="table table-bordered">
+    <thead class="table-dark">
+        <tr>
+            <th>Student ID</th>
+            <th>Name</th>
+            <th>Subject</th>
+            <th>Class</th>
+            <th>Score</th>
+            <th>Type</th>  <!-- Loại điểm -->
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var grade in Model)  // Duyệt qua từng điểm
+        {
+            <tr>
+                <td>@grade.StudentId</td>  <!-- ID sinh viên -->
+                <td>@grade.StudentName</td>  <!-- Tên sinh viên -->
+                <td>@grade.Subject</td>  <!-- Môn học -->
+                <td>@grade.ClassName</td>  <!-- Lớp -->
+                <td>@grade.Score</td>  <!-- Điểm -->
+                <td>@grade.Type</td>  <!-- Loại điểm -->
+            </tr>
+        }
+    </tbody>
+</table>

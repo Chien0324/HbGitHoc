@@ -1,0 +1,107 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";  // Sử dụng layout chung
+}
+@model List<SIMS_App.Models.Course>  // Khai báo model là danh sách khóa học
+
+<h2>My Courses</h2>  // Tiêu đề trang
+
+<style>
+    /* CSS cho phần danh sách sinh viên */
+    #studentsList {
+        margin-top: 20px;
+        padding: 15px;
+        background: #f8f9fa;
+        border-radius: 5px;
+    }
+</style>
+
+<div class="container">
+    <div id="studentsList" style="display: none;"></div>  // Div ẩn để hiển thị danh sách sinh viên
+
+    <!-- Form thêm khóa học -->
+    <input type="text" id="courseName" placeholder="Course Name">  // Ô nhập tên khóa học
+    <input type="date" id="startDate">  // Ô chọn ngày bắt đầu
+    <input type="date" id="endDate">  // Ô chọn ngày kết thúc
+    <input type="number" id="totalStudents" placeholder="Total Students">  // Ô nhập tổng số sinh viên
+    <input type="number" id="sessions" placeholder="Number of Sessions">  // Ô nhập số buổi học
+    <button class="btn btn-success" onclick="addCourse()">Add Course</button>  // Nút thêm khóa học
+
+    <table class="table table-bordered">
+        // Bảng danh sách khóa học
+        <thead>
+            <tr>
+                <th>ID</th>  // Cột ID
+                <th>Name</th>  // Cột tên
+                <th>Total Students</th>  // Cột tổng sinh viên
+                <th>Start Date</th>  // Cột ngày bắt đầu
+                <th>End Date</th>  // Cột ngày kết thúc
+                <th>Sessions</th>  // Cột số buổi
+                <th>Action</th>  // Cột hành động
+            </tr>
+        </thead>
+        <tbody id="courseTable">
+            @foreach (var course in Model)  // Duyệt qua từng khóa học
+            {
+                <tr id="course_@course.CourseId">
+                    // Mỗi hàng có ID riêng
+                    <td>@course.CourseId</td>  // Hiển thị ID
+                    <td>@course.Name</td>  // Hiển thị tên
+                    // Các thông tin khác...
+                    <td>
+                        <button class="btn btn-primary" onclick="editCourse(@course.CourseId, '@course.Name')">Edit</button>  // Nút sửa
+                        <button class="btn btn-info" onclick="viewStudents(@Convert.ToInt32(course.CourseId))">View Students</button>  // Nút xem sinh viên
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>  // Import jQuery
+<script>
+    // Hàm thêm khóa học
+    function addCourse() {
+        // Lấy giá trị từ các ô input
+        var name = $("#courseName").val();
+        var startDate = $("#startDate").val();
+        var endDate = $("#endDate").val();
+        var totalStudents = parseInt($("#totalStudents").val());
+        var sessions = parseInt($("#sessions").val());
+
+        // Kiểm tra hợp lệ
+        if (!name || !startDate || !endDate || isNaN(totalStudents) || isNaN(sessions)) {
+            alert("Please fill in all fields correctly.");
+            return;
+        }
+
+        // Tạo object course
+        var course = {
+            Name: name,
+            StartDate: startDate,
+            EndDate: endDate,
+            TotalStudents: totalStudents,
+            NumberOfSessions: sessions
+        };
+
+        // Gửi AJAX request
+        $.ajax({
+            url: "/Courses/AddCourse",
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(course),
+            success: function (response) {
+                if (response.success) {
+                    alert(response.message);
+                    location.reload();  // Tải lại trang
+                } else {
+                    alert("Failed to add course.");
+                }
+            },
+            error: function () {
+                alert("Error adding course.");
+            }
+        });
+    }
+
+    // Các hàm khác: editCourse, viewStudents...
+</script>

@@ -1,0 +1,108 @@
+﻿<!-- View quản lý điểm -->
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model List<SIMS_App.Models.Grade>  // Model danh sách điểm
+
+<h2>Manage Grades</h2>  <!-- Tiêu đề -->
+<!-- Nút thêm điểm -->
+<button class="btn btn-primary mb-3" onclick="showAddGradeForm()">Add Grade</button>
+
+<!-- Bảng điểm -->
+<table class="table table-bordered">
+    <thead class="table-dark">
+        <tr>
+            <th>Student ID</th>
+            <th>Name</th>
+            <th>Subject</th>
+            <th>Class</th>
+            <th>Score</th>
+            <th>Type</th>
+            <th>Actions</th>  <!-- Cột hành động -->
+        </tr>
+    </thead>
+    <tbody id="gradeTable">
+        @foreach (var grade in Model)  // Duyệt qua từng điểm
+        {
+            <tr>
+                <td>@grade.StudentId</td>  <!-- ID SV -->
+                <td>@grade.StudentName</td>  <!-- Tên SV -->
+                <td>@grade.Subject</td>  <!-- Môn học -->
+                <td>@grade.ClassName</td>  <!-- Lớp -->
+                <td>@grade.Score</td>  <!-- Điểm -->
+                <td>@grade.Type</td>  <!-- Loại điểm -->
+                <td>
+                    <!-- Nút sửa và xóa -->
+                    <button class="btn btn-warning" onclick="editGrade('@grade.StudentId', '@grade.StudentName', '@grade.Subject', '@grade.ClassName', '@grade.Score', '@grade.Type')">Edit</button>
+                    <button class="btn btn-danger" onclick="deleteGrade('@grade.StudentId', '@grade.Subject')">Delete</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Modal form điểm -->
+<div id="gradeFormModal" class="modal" style="display:none;">
+    <div class="modal-content">
+        <h4 id="formTitle">Add Grade</h4>  <!-- Tiêu đề form -->
+        <input type="hidden" id="studentId">  <!-- Ẩn ID SV -->
+        <!-- Các trường thông tin -->
+        <label>Student Name:</label>
+        <input type="text" id="studentName" class="form-control">
+        <span class="error-text" id="errorStudentName"></span>  <!-- Hiển thị lỗi -->
+        <!-- Các trường khác tương tự... -->
+        <!-- Nút lưu và hủy -->
+        <button onclick="saveGrade()" class="btn btn-success mt-2">Save</button>
+        <button onclick="closeModal()" class="btn btn-secondary mt-2">Cancel</button>
+    </div>
+</div>
+
+<!-- Script xử lý -->
+<script>
+    // Hàm lưu điểm
+    function saveGrade() {
+        // Reset lỗi
+        $(".error-text").text("");
+
+        let isValid = true;
+        // Validate các trường
+        if ($("#studentName").val().trim() === "") {
+            $("#errorStudentName").text("Student name is required!");
+            isValid = false;
+        }
+        // Validate các trường khác...
+
+        if (!isValid) return;  // Dừng nếu có lỗi
+
+        // Tạo object điểm
+        const grade = {
+            studentId: $("#studentId").val() || 0,
+            studentName: $("#studentName").val().trim(),
+            subject: $("#subject").val().trim(),
+            className: $("#className").val().trim(),
+            score: $("#score").val().trim(),
+            type: $("#type").val().trim()
+        };
+
+        // Xác định URL API
+        let url = grade.studentId ? "/Grade/UpdateGrade" : "/Grade/AddGrade";
+
+        // Gọi API
+        $.ajax({
+            url: url,
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(grade),
+            success: function (response) {
+                if (response.success) {
+                    alert(response.message);
+                    location.reload();  // Tải lại trang
+                }
+            }
+        });
+
+        closeModal();  // Đóng modal
+    }
+
+    // Các hàm khác...
+</script>

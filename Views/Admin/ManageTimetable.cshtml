@@ -1,0 +1,41 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";  // Layout chung
+}
+@model List<SIMS_App.Models.Timetable>  // Model là danh sách thời khóa biểu
+
+<h2>Manage Timetable</h2>  // Tiêu đề trang
+
+<!-- Nút thêm thời khóa biểu -->
+<button class="btn btn-primary mb-3" onclick="showAddTimetableForm()">Add Timetable</button>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Student Name</th>  // Cột tên sinh viên
+            <th>Subject</th>  // Cột môn học
+            <th>Class</th>  // Cột lớp
+            <th>Teacher</th>  // Cột giáo viên
+            <th>Start Time</th>  // Cột thời gian bắt đầu
+            <th>End Time</th>  // Cột thời gian kết thúc
+            <th>Actions</th>  // Cột hành động
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var timetable in Model)  // Duyệt qua từng thời khóa biểu
+        {
+            <tr>
+                <!-- Hiển thị thông tin thời khóa biểu -->
+                <td>@timetable.StudentName</td>
+                <td>@timetable.Subject</td>
+                <!-- Các thông tin khác -->
+                <td>
+                    <!-- Các nút hành động -->
+                    <button onclick="editTimetable(...)">Edit</button>
+                    <button onclick="deleteTimetable(...)">Delete</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Modal form thêm

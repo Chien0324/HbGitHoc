@@ -1,0 +1,94 @@
+﻿<!-- View xem lớp học của sinh viên -->
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";  // Layout chung
+}
+@model List<SIMS_App.Models.Class>  // Model là danh sách lớp
+
+<h2>My Classes</h2>  <!-- Tiêu đề -->
+
+<style>
+    /* CSS cho trang */
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        // Màu nền margin: 20px;
+        // Lề
+    }
+    /* Các style khác... */
+</style>
+
+<!-- Bảng hiển thị lớp học -->
+<table id="classTable">
+    <tr>
+        <th>ID</th>
+        <th>Class Name</th>
+        <th>Course ID</th>
+        <th>Actions</th>
+    </tr>
+    @foreach (var cls in Model)  // Duyệt qua từng lớp
+    {
+        <tr>
+            <td>@cls.Id</td>  <!-- Hiển thị ID -->
+            <td>@cls.Name</td>  <!-- Tên lớp -->
+            <td>@cls.CourseId</td>  <!-- ID khóa học -->
+            <td>
+                <!-- Nút xem sinh viên trong lớp -->
+                <button class="view-btn" onclick="viewStudents(@cls.Id)">View Students</button>
+            </td>
+        </tr>
+    }
+</table>
+
+<!-- Khu vực hiển thị danh sách sinh viên -->
+<div id="studentsList" style="display: none;">
+    <h3>Student List</h3>
+    <ul id="students"></ul>
+</div>
+
+<!-- Script xử lý -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    // Hàm xem sinh viên trong lớp
+    function viewStudents(classId) {
+        console.log("Fetching students for class ID: " + classId);
+
+        // Gọi API lấy danh sách sinh viên
+        $.ajax({
+            url: '/Class/ViewStudents',
+            type: 'GET',
+            data: { id: classId },
+            success: function (response) {
+                if (response.success && Array.isArray(response.students)) {
+                    // Tạo bảng sinh viên
+                    let studentList = `<h3>Students in Class ${classId}</h3>
+                            <table class="student-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                    </tr>
+                                </thead>
+                                <tbody>`;
+
+                    // Thêm từng sinh viên vào bảng
+                    response.students.forEach(student => {
+                        studentList += `<tr>
+                                    <td>${student.id || 'N/A'}</td>
+                                    <td>${student.name || 'N/A'}</td>
+                                    <td>${student.email || 'N/A'}</td>
+                                </tr>`;
+                    });
+
+                    // Hiển thị bảng
+                    $('#studentsList').html(studentList).show();
+                } else {
+                    // Hiển thị thông báo nếu không có sinh viên
+                    $('#studentsList').html(`<div class="alert alert-warning">
+                                ${response.message || 'No students found'}
+                            </div>`).show();
+                }
+            }
+        });
+    }
+</script>

@@ -1,0 +1,114 @@
+﻿<!-- View quản lý sinh viên -->
+@{
+    ViewData["Title"] = "User Management";  // Tiêu đề trang
+    Layout = "~/Views/Shared/_Layout.cshtml";  // Sử dụng layout chung
+}
+
+@model List<SIMS_App.Models.User>  // Model nhận vào là danh sách User
+
+<style>
+    /* CSS cho trang */
+    body, html {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f6f9;
+        // Màu nền
+    }
+
+    /* Container chính */
+    .container {
+        background: #ffffff;
+        // Nền trắng padding: 30px;
+        // Khoảng cách đệm border-radius: 10px;
+        // Bo góc max-width: 1200px;
+        // Chiều rộng tối đa margin: 0 auto;
+        // Căn giữa
+    }
+    /* Các style khác tương tự... */
+</style>
+
+<div class="container">
+    <h2>Student Management</h2>  <!-- Tiêu đề trang -->
+    <!-- Welcome section -->
+    <div class="container mt-4">
+        <h2>Welcome to Student Information Management System</h2>
+        <p>Manage students, courses, records, and classes efficiently.</p>
+    </div>
+
+    <!-- Logo trường -->
+    <div class="logo">
+        <img src="~/images/screenshot 2025-04-01 114816.png" alt="FPT Logo" height="540">
+    </div>
+
+    <!-- Nút thêm user -->
+    <button class="btn btn-primary mb-3" onclick="showAddUserForm()">Add User</button>
+
+    <!-- Bảng hiển thị danh sách user -->
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Date of Birth</th>
+                    <th>Actions</th>  <!-- Cột hành động -->
+                </tr>
+            </thead>
+            <tbody id="userTable"></tbody>  <!-- Nội dung bảng sẽ được load bằng JS -->
+        </table>
+    </div>
+</div>
+
+<!-- Modal form thêm/sửa user -->
+<div id="userFormModal" class="modal" style="display:none;">
+    <div class="modal-content">
+        <h4 id="formTitle">Add User</h4>  <!-- Tiêu đề form -->
+        <input type="hidden" id="userId">  <!-- Ẩn ID user -->
+        <!-- Các trường thông tin user -->
+        <label>Name:</label>
+        <input type="text" id="userName" class="form-control">
+        <!-- Các trường khác tương tự... -->
+        <!-- Nút lưu và hủy -->
+        <button onclick="saveUser()" class="btn btn-success mt-2">Save</button>
+        <button onclick="closeModal()" class="btn btn-secondary mt-2">Cancel</button>
+    </div>
+</div>
+
+<!-- Script xử lý -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    // Load danh sách user khi trang tải xong
+    $(document).ready(function () {
+        loadUsers();
+    });
+
+    // Hàm load user từ server
+    function loadUsers() {
+        $.get("/User/GetUsers", function (data) {
+            if (data.success) {
+                let rows = "";
+                // Duyệt qua từng user và tạo hàng trong bảng
+                data.users.forEach(user => {
+                    rows += `<tr>
+                                <td>${user.id}</td>
+                                <td>${user.name}</td>
+                                <td>${user.email}</td>
+                                <td>${user.phone}</td>
+                                <td>${user.dateOfBirth}</td>
+                                <td>
+                                    <!-- Nút sửa và xóa -->
+                                    <button class="btn btn-warning" onclick="editUser(${user.id}, '${user.name}', '${user.email}', '${user.phone}', '${user.dateOfBirth}')">Edit</button>
+                                    <button class="btn btn-danger" onclick="deleteUser(${user.id})">Delete</button>
+                                </td>
+                            </tr>`;
+                });
+                $("#userTable").html(rows);  // Đổ dữ liệu vào bảng
+            }
+        });
+    }
+
+    // Các hàm xử lý khác...
+</script>

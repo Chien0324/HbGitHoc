@@ -1,0 +1,100 @@
+﻿<!-- View quản lý lớp học -->
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model List<SIMS_App.Models.Class>  // Model danh sách lớp
+
+@{
+    ViewData["Title"] = "Class Management";  // Tiêu đề
+}
+
+<!-- CSS cho trang -->
+
+<h2>Class Management</h2>  <!-- Tiêu đề -->
+<!-- Bảng lớp học -->
+<table id="classTable">
+    <tr>
+        <th>ID</th>
+        <th>Class Name</th>
+        <th>Course ID</th>
+        <th>Actions</th>  <!-- Cột hành động -->
+    </tr>
+    @foreach (var cls in Model)  // Duyệt qua từng lớp
+    {
+        <tr>
+            <td>@cls.Id</td>  <!-- ID lớp -->
+            <td>@cls.Name</td>  <!-- Tên lớp -->
+            <td>@cls.CourseId</td>  <!-- ID khóa học -->
+            <td>
+                <!-- Các nút hành động -->
+                <button class="edit-btn" onclick="editClass(@cls.Id, '@cls.Name', @cls.CourseId)">Edit</button>
+                <button class="delete-btn" onclick="deleteClass(@cls.Id)">Delete</button>
+                <button class="view-btn" onclick="viewStudents(@cls.Id)">View Students</button>
+            </td>
+        </tr>
+    }
+</table>
+
+<!-- Form thêm lớp mới -->
+<h3>Add New Class</h3>
+<input type="text" id="className" placeholder="Class Name">  <!-- Nhập tên lớp -->
+<input type="number" id="courseId" placeholder="Course ID">  <!-- Nhập ID khóa -->
+<button onclick="addClass()">Add</button>  <!-- Nút thêm -->
+<!-- Form sửa lớp -->
+<div id="editForm" style="display: none;">
+    <h3>Edit Class</h3>
+    <input type="hidden" id="editClassId">  <!-- Ẩn ID lớp -->
+    <input type="text" id="editClassName" placeholder="Class Name">  <!-- Tên lớp -->
+    <input type="number" id="editCourseId" placeholder="Course ID">  <!-- ID khóa -->
+    <button onclick="updateClass()">Save</button>  <!-- Nút lưu -->
+</div>
+
+<!-- Khu vực hiển thị sinh viên -->
+<div id="studentsList" style="display: none;">
+    <h3>Student List</h3>
+    <ul id="students"></ul>
+</div>
+
+<!-- Script xử lý -->
+<script>
+    // Hàm thêm lớp
+    function addClass() {
+        var name = $("#className").val();  // Lấy tên lớp
+        var courseId = $("#courseId").val();  // Lấy ID khóa
+
+        if (!name || !courseId) {  // Validate
+            alert("Please fill in all fields!");
+            return;
+        }
+
+        // Gọi API thêm lớp
+        $.ajax({
+            url: "/Class/AddClass",
+            type: "POST",
+            data: { name: name, courseId: courseId },
+            success: function (response) {
+                if (response.success) {
+                    alert(response.message);
+                    // Thêm hàng mới vào bảng
+                    var newRow = `<tr>
+                                <td>${response.newClassId}</td>
+                                <td>${name}</td>
+                                <td>${courseId}</td>
+                                <td>
+                                    <button class="edit-btn" onclick="editClass(${response.newClassId}, '${name}', ${courseId})">Edit</button>
+                                    <button class="delete-btn" onclick="deleteClass(${response.newClassId})">Delete</button>
+                                    <button class="view-btn" onclick="viewStudents(${response.newClassId})">View Students</button>
+                                </td>
+                            </tr>`;
+                    $("#classTable").append(newRow);
+
+                    // Reset form
+                    $("#className").val("");
+                    $("#courseId").val("");
+                }
+            }
+        });
+    }
+
+    // Các hàm khác...
+</script>

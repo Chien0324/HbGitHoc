@@ -1,0 +1,47 @@
+﻿@model List<SIMS_App.Models.Record>  // Model là danh sách bản ghi điểm danh
+@{
+    ViewData["Title"] = "Home";  // Tiêu đề trang
+}
+
+<style>
+    /* CSS định dạng giao diện quản lý điểm danh */
+</style>
+
+<div class="main-container">
+    <h2>Manage Attendance Records</h2>  // Tiêu đề trang
+
+    <div class="data-section">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Student ID</th>  // Cột ID sinh viên
+                    <th>Full Name</th>  // Cột tên đầy đủ
+                    <th>Status</th>  // Cột trạng thái
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var record in Model)  // Duyệt qua từng bản ghi
+                {
+                    <tr>
+                        <td>@record.StudentId</td>  // Hiển thị ID sinh viên
+                        <td>@record.StudentName</td>  // Hiển thị tên sinh viên
+                        <td class="@(record.IsPresent ? "status-present" : "status-absent")">
+                            @(record.IsPresent ? "✅ Present" : "❌ Absent")  // Hiển thị trạng thái
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="form-container">
+        <form method="post" action="@Url.Action("UpdateAttendance", "Record")">
+            <!-- Form cập nhật điểm danh -->
+            <div class="form-group">
+                <label for="studentId">Student ID</label>  // Nhãn ID sinh viên
+                <input type="text" class="form-control" id="studentId" name="studentId" required>
+            </div>
+            <!-- Các trường khác và nút submit -->
+        </form>
+    </div>
+</div>

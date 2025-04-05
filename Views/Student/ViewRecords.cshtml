@@ -1,0 +1,76 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";  // Sử dụng layout chung
+}
+@model List<SIMS_App.Models.Record>  // Model là danh sách bản ghi
+
+@{
+    ViewData["Title"] = "View Attendance Records";  // Tiêu đề trang
+}
+
+<style>
+    /* CSS định dạng bảng */
+    table {
+        width: 95%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #f2f2f2;
+        // Màu nền header
+    }
+
+    tr:nth-child(even) {
+        background-color: #f9f9f9;
+        // Màu nền xen kẽ
+    }
+
+    .present {
+        color: green;
+        // Màu cho trạng thái có mặt
+    }
+
+    .absent {
+        color: red;
+        // Màu cho trạng thái vắng mặt
+    }
+</style>
+
+<h2>Your Attendance Records</h2>  // Tiêu đề
+
+<table border="1">
+    // Bảng điểm danh
+    <thead>
+        <tr>
+            <th>Student ID</th>  // Cột ID sinh viên
+            <th>Name</th>  // Cột tên
+            <th>Class</th>  // Cột lớp
+            <th>Course</th>  // Cột khóa học
+            <th>Attendance Status</th>  // Cột trạng thái
+            <th>Absence Rate (%)</th>  // Cột tỷ lệ vắng
+            <th>Date</th>  // Cột ngày
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var record in Model)  // Duyệt qua từng bản ghi
+        {
+            <tr>
+                <td>@record.StudentId</td>  // Hiển thị ID
+                <td>@record.StudentName</td>  // Hiển thị tên
+                <td>@record.ClassName</td>  // Hiển thị lớp
+                <td>@record.CourseName</td>  // Hiển thị khóa học
+                <td>
+                    @(record.IsPresent ? "✅ Present" : "❌ Absent")  // Hiển thị trạng thái
+                </td>
+                <td>@record.AbsenceRate.ToString("F2")</td>  // Hiển thị tỷ lệ vắng
+                <td>@record.Date.ToString("yyyy-MM-dd")</td>  // Hiển thị ngày
+            </tr>
+        }
+    </tbody>
+</table>

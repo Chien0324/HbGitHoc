@@ -1,0 +1,79 @@
+﻿@{
+    ViewData["Title"] = "User Management";  // Đặt tiêu đề trang là "User Management"
+    Layout = "~/Views/Shared/_Layout.cshtml";  // Sử dụng layout chung từ thư mục Shared
+}
+
+@model List<SIMS_App.Models.User>  // Khai báo model là danh sách User
+
+<style>
+    /* Phần CSS định dạng giao diện */
+    body, html {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f6f9;
+        // Màu nền cho body
+    }
+
+    .container {
+        background: #ffffff;
+        // Màu nền container padding: 30px;
+        // Khoảng cách đệm border-radius: 10px;
+        // Bo góc container max-width: 1200px;
+        // Chiều rộng tối đa margin: 0 auto;
+        // Căn giữa container
+    }
+
+    /* Các định dạng khác cho tiêu đề, bảng, nút... */
+</style>
+
+<div class="container">
+    <h2>Admin, Student Management</h2>  // Tiêu đề trang
+    <button class="btn btn-primary mb-3" onclick="showAddUserForm()">Add User</button>  // Nút thêm người dùng
+
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>  // Cột ID
+                    <th>Name</th>  // Cột tên
+                    <th>Email</th>  // Cột email
+                    <th>Phone</th>  // Cột số điện thoại
+                    <th>Date of Birth</th>  // Cột ngày sinh
+                    <th>Actions</th>  // Cột hành động
+                </tr>
+            </thead>
+            <tbody id="userTable"></tbody>  // Nội dung bảng sẽ được load bằng JS
+        </table>
+    </div>
+</div>
+
+<!-- Modal form thêm/sửa người dùng -->
+<div id="userFormModal" class="modal" style="display:none;">
+    <div class="modal-content">
+        <h4 id="formTitle">Add User</h4>  // Tiêu đề form
+        <input type="hidden" id="userId">  // Hidden field để lưu ID người dùng
+        <!-- Các trường thông tin người dùng -->
+        <button onclick="saveUser()" class="btn btn-success mt-2">Save</button>  // Nút lưu
+        <button onclick="closeModal()" class="btn btn-secondary mt-2">Cancel</button>  // Nút hủy
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>  // Thư viện jQuery
+<script>
+    // Hàm load danh sách người dùng từ server
+    function loadUsers() {
+        $.get("/User/GetUsers", function (data) {
+            if (data.success) {
+                let rows = "";
+                data.users.forEach(user => {
+                    // Tạo hàng cho mỗi người dùng
+                    rows += `<tr>...</tr>`;
+                });
+                $("#userTable").html(rows);  // Đổ dữ liệu vào bảng
+            }
+        });
+    }
+
+    // Các hàm khác: showAddUserForm, editUser, saveUser, deleteUser, closeModal
+</script>

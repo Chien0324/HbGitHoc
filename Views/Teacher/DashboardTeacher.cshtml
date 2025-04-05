@@ -1,0 +1,33 @@
+﻿<!-- Dashboard giáo viên (tương tự DashboardStudent) -->
+@{
+    ViewData["Title"] = "User Management";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@model List<SIMS_App.Models.User>  // Model danh sách user
+
+<!-- CSS giống DashboardStudent -->
+
+<div class="container">
+    <h2>Student Management</h2>  <!-- Quản lý sinh viên -->
+    <button class="btn btn-primary mb-3" onclick="showAddUserForm()">Add User</button>  <!-- Nút thêm -->
+    <!-- Bảng user -->
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Date of Birth</th>
+                    <th>Actions</th>  <!-- Cột hành động -->
+                </tr>
+            </thead>
+            <tbody id="userTable"></tbody>  <!-- Load bằng JS -->
+        </table>
+    </div>
+</div>
+
+<!-- Modal form thêm/sửa user (giống DashboardStudent) -->
+<!-- Script xử lý (giống DashboardStudent) -->

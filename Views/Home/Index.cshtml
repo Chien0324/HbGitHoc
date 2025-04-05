@@ -1,0 +1,72 @@
+﻿@{
+    ViewData["Title"] = "Home";  // Đặt tiêu đề trang là "Home"
+    var role = Context.Session.GetString("Role") ?? "Guest";  // Lấy role từ session, mặc định là "Guest"
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">  // Khai báo bảng mã ký tự
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">  // Thiết lập viewport cho responsive
+    <title>Student Information Management System</title>  // Tiêu đề trình duyệt
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">  // Import Bootstrap CSS
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        // Thanh navbar màu tối
+        <div class="container mt-4">
+            <h2>Welcome to Student Information Management System</h2>  // Tiêu đề chào mừng
+            <p>Manage students, courses, records, and classes efficiently.</p>  // Mô tả hệ thống
+        </div>
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">SIMS</a>  // Logo hệ thống
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                // Nút toggle cho mobile
+                <span class="navbar-toggler-icon"></span>  // Icon toggle
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                // Phần menu có thể thu gọn
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Index", "Home")">Home</a>  // Link trang chủ
+                    </li>
+                    @if (role == "Admin")  // Kiểm tra nếu là Admin
+                    {
+                        // Các menu dành cho Admin
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("AdminDashboard", "User")">User Management</a>  // Quản lý người dùng
+                        </li>
+                        // Các menu quản lý khác...
+                    }
+                    else if (role == "Teacher")  // Kiểm tra nếu là Giáo viên
+                    {
+                        // Các menu dành cho Giáo viên
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("DashboardTeacher", "User")">Teacher Dashboard</a>  // Bảng điều khiển giáo viên
+                        </li>
+                        // Các menu khác...
+                    }
+                    else if (role == "Student")  // Kiểm tra nếu là Sinh viên
+                    {
+                        // Các menu dành cho Sinh viên
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("DashboardStudent", "User")">Student Dashboard</a>  // Bảng điều khiển sinh viên
+                        </li>
+                        // Các menu khác...
+                    }
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <span class="nav-link text-light">Role: @role</span>  // Hiển thị role hiện tại
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-outline-light" href="@Url.Action("Logout", "Auth")">Logout</a>  // Nút đăng xuất
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>  // Import Bootstrap JS
+</body>
+</html>
